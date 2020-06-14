@@ -4,21 +4,33 @@ $t = filter_input(INPUT_GET, 't', FILTER_SANITIZE_STRING);
 
 switch ($t) {
     case 'topic1':
-        $dataIn = file_get_contents('https://tak17.janek.itmajakas.ee/code/hajusrakendused/ylesanne5');
-
-        if (!file_exists('upload/topic.json')) {
-            file_put_contents('upload/topic.json', $dataIn);
-        }
-
-        $data = json_decode(file_get_contents('upload/topic.json'));
-
+        $url = 'https://tak17.janek.itmajakas.ee/code/hajusrakendused/ylesanne5';
+        $cacheFile = './cache/topic1.json';
+        $cacheTime= 300;
         break;
-
+//TODO test this
     case 'topic2':
-        $data = [];
+        $url = 'https://favorite-subject.tak17koost.itmajakas.ee';
+        $cacheFile = './cache/topic2.json';
+        $cacheTime= 600;
         break;
+
     default:
-        $data = [];
+        $url = 'https://viies.tak17freimann.itmajakas.ee';
+        $cacheFile = './cache/default.json';
+        $cacheTime= 200;
+}
+
+if ( file_exists($cacheFile) && (time() - filemtime($cacheFile)) <$cacheTime ) {
+    $data = json_decode(file_get_contents($cacheFile));
+
+} else {
+    $data = json_decode(file_get_contents($url));
+
+    $file = fopen($cacheFile, 'w');
+
+    fwrite($file, json_encode($data));
+    fclose($file);
 }
 
 ?>
@@ -49,6 +61,8 @@ switch ($t) {
             <?php
 
             echo $data->info->name . " - " . $data->info->description . '<br>';
+
+            //var_dump($data);
 
             foreach ($data->data as $row) { ?>
 

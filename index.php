@@ -1,32 +1,30 @@
 <?php
+// json only
 
-echo json_encode([
-    'info' => [
-        'name' => 'Heli kopter',
-        'description' => 'Heli Kopter favorite topic'
-    ],
-    'data' => [
-        [
-            'title' => 'title1',
-            'description' => 'Description1',
-            'image' => 'https://tak17.janek.itmajakas.ee/code/hajusrakendused/ylesanne5/upload/image.jpeg',
-            'topic1' => 'topic1',
-            'topic2' => 'topic2',
-        ],
-        [
-            'title' => 'title2',
-            'description' => 'Description2',
-            'image' => 'https://image.link2.com',
-            'topic1' => 'topic1',
-            'topic2' => 'topic2',
-        ],
-        [
-            'title' => 'title3',
-            'description' => 'Description3',
-            'image' => 'https://image.link3.com',
-            'topic1' => 'topic1',
-            'topic2' => 'topic2',
-        ],
-    ]
+require 'connect.php';
 
-]);
+$query = "SELECT * FROM yes";
+
+$datas =
+    [
+        'info' => [
+            'name' => 'Aliandra Freimann',
+            'description' => 'Books'
+        ],
+    ];
+
+if ($result = $mysqli->query($query)) {
+    while ($data = $result->fetch_array()) {
+        $datas['data'][] =
+            [
+                'title' => $data['title'],
+                'image' => $data['image'],
+                'description' => $data['description'],
+                'topic1'=> $data['author'],
+                'topic2' => $data['year']
+            ];
+    }
+    $result->close();
+}
+
+echo json_encode($datas);
