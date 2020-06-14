@@ -1,3 +1,3 @@
 # viies
 # Link
-viies.tak17freimann.itmajakas.ee
+https://viies.tak17freimann.itmajakas.ee/form.php
